@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    {
+      "git_url": "git@github.com:infraxys-modules/terraform.git",
+      "branch": "master"
+    }
+  ]
+}
