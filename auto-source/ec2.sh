@@ -30,7 +30,8 @@ function get_instance_private_ip() {
 
 # get_instance_public_dns: Get the public dns address of the instance with name '$instance_name' in vpc with id '$vpc_id'
 function get_instance_public_dns() {
-    local function_name="get_instance_public_dns" instance_name vpc_id vpc_name target_variable_name tmp_instance_json;
+    local function_name="get_instance_public_dns" instance_name vpc_id vpc_name target_variable_name tmp_instance_json \
+        fail_if_not_found="true";
     import_args "$@";
     check_required_arguments $function_name instance_name target_variable_name;
     check_required_argument $function_name vpc_id vpc_name
@@ -40,7 +41,9 @@ function get_instance_public_dns() {
         --target_variable_name _get_instance_public_dns;
     _get_instance_public_dns="$(echo "$_get_instance_public_dns" | jq -r '.PublicDnsName')";
     [[ "$_get_instance_public_dns" == "null" ]] && _get_instance_public_dns="";
-
+    if [ -z "$_get_instance_public_dns" -a "$fail_if_not_found" == "true" ]; then
+        log_fatal "No instance with name $instance_name found.";
+    fi;
     eval "$target_variable_name='$_get_instance_public_dns'";
 }
 
@@ -48,6 +51,7 @@ function get_instance_public_dns() {
 function get_ami() {
     local function_name="get_ami" ami_name ami_name_prefix owners="self" target_variable_name;
     import_args "$@";
+    check_required_arguments "$function_name" target_variable_name;
     check_required_argument "$function_name" ami_name ami_name_prefix target_variable_name;
 
     if [ -n "$ami_name" -a -n "$ami_name_prefix" ]; then
