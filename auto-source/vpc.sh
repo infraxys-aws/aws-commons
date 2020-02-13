@@ -4,9 +4,9 @@
 #   otherwise get the json using the AWS CLI and cache the result
 # Call this function with argument 'target_variable_name' to avoid the need of running it in a sub-shell.
 function get_vpc() {
-    local function_name="get_vpc" vpc_name target_variable_name vpc_json fail_if_not_found="true";
+    local function_name="get_vpc" vpc_name target_variable_name vpc_json fail_if_not_found="true" region="$aws_region";
     import_args "$@";
-    check_required_arguments $function_name vpc_name target_variable_name;
+    check_required_arguments $function_name vpc_name target_variable_name region;
 
     cache_variable_name="vpc_json_${vpc_name//[-.]/_}";
     local cached_value="${!cache_variable_name}";
@@ -16,7 +16,7 @@ function get_vpc() {
         log_debug "Retrieved VPC config for '$vpc_name' from cache.";
     else
         log_info "Retrieving VPC ID for VPC '$vpc_name'.";
-        local _get_vpc="$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=$vpc_name" | jq -r ".Vpcs[0]")";
+        local _get_vpc="$(aws ec2 describe-vpcs --region "$region" --filters "Name=tag:Name,Values=$vpc_name" | jq -r ".Vpcs[0]")";
         [[ "$_get_vpc" == "null" ]] && _get_vpc="";
     fi;
 
@@ -30,12 +30,12 @@ function get_vpc() {
 # Get the vpc_id for VPC <vpc_name> using function get_vpc()
 # Call this function with argument 'target_variable_name' to avoid the need of running it in a sub-shell.
 function get_vpc_id() {
-    local function_name="get_vpc_id" vpc_name target_variable_name temp_var fail_if_not_found="true";
+    local function_name="get_vpc_id" vpc_name target_variable_name temp_var fail_if_not_found="true" region="$aws_region";
     import_args "$@";
-    check_required_arguments $function_name vpc_name target_variable_name;
+    check_required_arguments $function_name vpc_name target_variable_name region;
 
     local _get_vpc_id;
-    get_vpc --vpc_name "$vpc_name" --target_variable_name "_get_vpc_id" --fail_if_not_found "$fail_if_not_found";
+    get_vpc --region "$region" --vpc_name "$vpc_name" --target_variable_name "_get_vpc_id" --fail_if_not_found "$fail_if_not_found";
 
     _get_vpc_id="$(echo "$_get_vpc_id" | jq -r ".VpcId")";
     [[ "$_get_vpc_id" == "null" ]] && _get_vpc_id="";
@@ -44,9 +44,10 @@ function get_vpc_id() {
 }
 
 function get_subnet_id() {
-    local function_name="get_subnet_id" subnet_name target_variable_name vpc_id vpc_name fail_if_not_found="true" tmp_subnet_id;
+    local function_name="get_subnet_id" subnet_name target_variable_name vpc_id vpc_name fail_if_not_found="true" \
+        region="$aws_region" tmp_subnet_id;
     import_args "$@";
-    check_required_arguments "$function_name" subnet_name target_variable_name;
+    check_required_arguments "$function_name" subnet_name target_variable_name region;
     check_required_argument "$function_name" vpc_id vpc_name;
 
     local _get_subnet_id="$vpc_id";
