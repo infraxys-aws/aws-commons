@@ -75,6 +75,10 @@ function get_ami() {
     log_info "Retrieving AMI through filter '$name_filter'.";
     local _get_ami="$(aws ec2 describe-images --region "$region" --owners $owners --filters "$name_filter" "Name=state,Values=available")";
     _get_ami="$(echo "$_get_ami" | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId')";
+
+    if [ "$_get_ami" == "-null-" -o "$_get_ami" == "null" ]; then
+      _get_ami="";
+    fi;
     eval "$target_variable_name='$_get_ami'";
 }
 
