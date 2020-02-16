@@ -1,4 +1,4 @@
-# AWS Core Infraxys module
+# AWS Commons Infraxys module
 
 ## Introduction
 
@@ -30,7 +30,9 @@ region = eu-west-1
 ```
 
 #### AWS-CONFIG
-Example variable for AWS access. "role_arn" and "mfa_serial" are optional.
+
+Create a variable and enter "AWS-CONFIG" as its type. Give it a name that's unique for "AWS-CONFIG"-variables.
+Example value:
 
 ```text
 [profile default]
