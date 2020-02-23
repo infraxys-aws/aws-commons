@@ -1,0 +1,1 @@
+export AWS_COMMONS_MODULE_DIR="$(pwd)";

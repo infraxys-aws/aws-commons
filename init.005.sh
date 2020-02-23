@@ -29,19 +29,32 @@ function set_aws_profile() {
     unset AWS_SECRET_ACCESS_KEY;
     unset AWS_ACCESS_KEY_ID;
 
-    rm -f ~/.aws/cli/cache/*
-    aws sts get-caller-identity --profile $AWS_PROFILE
-    if [ -d ~/.aws/cli/cache ]; then
-        FILE=$(find ~/.aws/cli/cache/ -name "*.json")
+    rm -f ~/.aws/cli/cache/* # this is used when assuming a role
+    local identity=$(aws sts get-caller-identity);
+    local username=$(echo -- "$identity" | sed -n 's!.*"arn:aws:iam::.*:user/\(.*\)".*!\1!p')
+    local tokens="";
+    if [ -n "$username" ]; then # logging in without assuming a role
+      mfa=$(aws iam list-mfa-devices --user-name "$username")
+      device=$(echo -- "$mfa" | sed -n 's!.*"SerialNumber": "\(.*\)".*!\1!p')
+      if [ -n "$device" ]; then
+        read -p "Enter MFA code for $device: " mfa_code;
+        tokens=$(aws sts get-session-token --serial-number "$device" --token-code $mfa_code)
+      fi;
+    else
+      if [ -d ~/.aws/cli/cache ]; then
+        local FILE=$(find ~/.aws/cli/cache/ -name "*.json")
         if [ -n "$FILE" ]; then
-            echo "Processing file $FILE";
-            export AWS_SECRET_ACCESS_KEY="$(cat "$FILE" | jq -r '.Credentials.SecretAccessKey')";
-            export AWS_SESSION_TOKEN="$(cat "$FILE" | jq -r '.Credentials.SessionToken')";
-            export AWS_ACCESS_KEY_ID="$(cat "$FILE" | jq -r '.Credentials.AccessKeyId')";
+          tokens=$(cat "$FILE");
         fi;
-  fi;
-
-    #export AWS_SDK_LOAD_CONFIG=1;
+      fi;
+    fi;
+    if [ -n "$tokens" ]; then
+      export AWS_SECRET_ACCESS_KEY="$(echo "$tokens" | jq -r '.Credentials.SecretAccessKey')";
+      export AWS_SESSION_TOKEN="$(echo "$tokens" | jq -r '.Credentials.SessionToken')";
+      export AWS_ACCESS_KEY_ID="$(echo "$tokens" | jq -r '.Credentials.AccessKeyId')";
+      expiration="$(echo "$tokens" | jq -r '.Credentials.Expiration')";
+      echo "Code is valid until $expiration";
+    fi;
 }
 
 mkdir ~/.aws;
