@@ -58,7 +58,7 @@ function get_instance_public_dns() {
 
 # get_ami: retrieve the ami with the specified name or prefix
 function get_ami() {
-    local function_name="get_ami" ami_name ami_name_prefix owners="self" target_variable_name region="$aws_region";
+    local function_name="get_ami" ami_name ami_name_prefix owners="self" executable_users="self" target_variable_name region="$aws_region";
     import_args "$@";
     check_required_arguments "$function_name" target_variable_name region;
     check_required_argument "$function_name" ami_name ami_name_prefix target_variable_name;
@@ -72,8 +72,17 @@ function get_ami() {
     else
         local name_filter="Name=name,Values=$ami_name_prefix"'*';
     fi;
-    log_info "Retrieving AMI through filter '$name_filter'.";
-    local _get_ami="$(aws ec2 describe-images --region "$region" --owners $owners --filters "$name_filter" "Name=state,Values=available")";
+    local owners_option="";
+    local executable_users_option="";
+    if [ -n "$executable_users" -a "$executable_users" != "self" ]; then
+      executable_users_option="--executable-users $executable_users";
+    else
+      owners_option="--owners $owners";
+    fi;
+    log_info "Retrieving latest AMI through filter '$name_filter'.";
+    local _get_ami="$(aws ec2 describe-images --region "$region" $owners_option \
+            --filters "$name_filter" "Name=state,Values=available" \
+            $executable_users_option)";
     _get_ami="$(echo "$_get_ami" | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId')";
 
     if [ "$_get_ami" == "-null-" -o "$_get_ami" == "null" ]; then

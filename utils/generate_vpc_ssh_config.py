@@ -17,7 +17,7 @@ class SshGenerator(object):
         self.get_vpc()
 
         if not self.vpc_id:
-            print("VPC not found. This is not necessarily a problem because it might not have been created yet.")
+            print("VPC '" + self.vpc_name + "' not found. This is not necessarily a problem because it might not have been created yet.")
             return ""
 
         instances_json = self.get_instances(vpc_id=self.vpc_id)
