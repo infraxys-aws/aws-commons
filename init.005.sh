@@ -1,8 +1,8 @@
 
 function set_aws_profile() {
-    export function_name="set_aws_profile" profile_name;
+    export profile_name;
     import_args "$@";
-    check_required_arguments "$function_name" profile_name;
+    check_required_arguments set_aws_profile profile_name;
 
     log_info "Setting AWS_PROFILE to '$profile_name' and clearing other AWS-variables.";
     export AWS_PROFILE="$profile_name";
@@ -12,7 +12,11 @@ function set_aws_profile() {
     unset AWS_ACCESS_KEY_ID;
 
     rm -f ~/.aws/cli/cache/* # this is used when assuming a role
-    local identity=$(aws sts get-caller-identity);
+    local identity="";
+    while [ -z "$identity" ]; do
+      local identity=$(aws sts get-caller-identity); # script exits if "local" is not used
+    done;
+
     local username=$(echo -- "$identity" | sed -n 's!.*"arn:aws:iam::.*:user/\(.*\)".*!\1!p')
     local tokens="";
     if [ -n "$username" ]; then # logging in without assuming a role
