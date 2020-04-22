@@ -1,9 +1,14 @@
 
 function set_aws_profile() {
+    local force_relogin="false";
     export profile_name;
     import_args "$@";
     check_required_arguments set_aws_profile profile_name;
 
+    if [ "$profile_name" == "$AWS_PROFILE" -a "$force_relogin" != "true" ]; then
+      log_info "Not setting aws credentials to $profile_name because it's already configured and argument 'force_relogin' is not 'true'.";
+      return;
+    fi;
     log_info "Setting AWS_PROFILE to '$profile_name' and clearing other AWS-variables.";
     export AWS_PROFILE="$profile_name";
     unset AWS_SESSION_ID;
@@ -60,5 +65,5 @@ elif [ -n "$aws_core_credentials_default_profile_or_role" ]; then
     set_aws_profile --profile_name "$aws_core_credentials_default_profile_or_role";
   fi;
 else
-  log_info "Not setting AWS environment automatically because variable 'aws_core_credentials_default_profile_or_role' is not set."
+  log_info "Not setting AWS environment automatically because none of 'aws_core_credentials_default_profile_or_role' and 'auto_connect_aws_profile_name' is set."
 fi;

@@ -30,6 +30,8 @@ class SshGenerator(object):
         instance_names = []
         bastion_instance = None
         bastion_name = ""
+        nat_bastion_instance = None
+        nat_bastion_name = ""
         instance_name_hostname_map = {}
         ssh_keys_by_instance_name = {}
         for reservation in instances_json['Reservations']:
@@ -43,6 +45,10 @@ class SshGenerator(object):
 
                 if not instance_name in ssh_keys_by_instance_name:
                     ssh_keys_by_instance_name[instance_name] = '{}.pem'.format(instance["KeyName"])
+
+                if "nat-" in instance_name.lower() and instance["PublicDnsName"] != "":
+                    nat_bastion_instance = instance
+                    nat_bastion_name = instance_name
 
                 if "bastion" in instance_name.lower():
                     bastion_instance = instance
@@ -59,7 +65,12 @@ class SshGenerator(object):
                     non_bastion_instances.append(instance)
 
         if not bastion_instance:
-            raise Exception("No instance with 'bastion' in the 'Name'-tag found in this vpc.")
+            if nat_bastion_instance: # use this as an alternative ...
+                bastion_instance = nat_bastion_instance
+                bastion_name = nat_bastion_name
+                non_bastion_instances.remove(bastion_instance)
+            else:
+                raise Exception("No instance with 'bastion' in the 'Name'-tag found in this vpc.")
 
 
         key_filename = "~/.ssh/keys/{}.pem".format(bastion_instance["KeyName"])
@@ -136,9 +147,10 @@ Host {}
         return instances_json
 
     def get_name_tag_value(self, json_object):
-        for tag in json_object["Tags"]:
-            if tag["Key"].lower() == "name":
-                return tag["Value"]
+        if "Tags" in json_object:
+            for tag in json_object["Tags"]:
+                if tag["Key"].lower() == "name":
+                    return tag["Value"]
 
         return None
 
