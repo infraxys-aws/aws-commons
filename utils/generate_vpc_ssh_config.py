@@ -32,7 +32,7 @@ class SshGenerator(object):
         bastion_name = ""
         nat_bastion_instance = None
         nat_bastion_name = ""
-        instance_name_hostname_map = {}
+        instance_details_json = {}
         ssh_keys_by_instance_name = {}
         for reservation in instances_json['Reservations']:
             for instance in reservation['Instances']:
@@ -53,13 +53,13 @@ class SshGenerator(object):
                 if "bastion" in instance_name.lower():
                     bastion_instance = instance
                     bastion_name = instance_name
-                    instance_name_hostname_map[instance_name] = []
-                    instance_name_hostname_map[instance_name].append(bastion_name)
+                    instance_details_json[instance_name] = []
+                    instance_details_json[instance_name].append(self.get_instance_details(bastion_name, instance))
                 else:
                     if instance_name in instance_names:
                         multi_instance_names.append(instance_name)
                     else:
-                        instance_name_hostname_map[instance_name] = []
+                        instance_details_json[instance_name] = []
 
                     instance_names.append(instance_name)
                     non_bastion_instances.append(instance)
@@ -98,7 +98,8 @@ class SshGenerator(object):
 
             #print("Adding {} to {}".format(instance_name, real_instance_name))
 
-            instance_name_hostname_map[real_instance_name].append(instance_name)
+            instance_details_json[real_instance_name].append(
+                self.get_instance_details(instance_name, instance))
             instance_private_ip = instance["PrivateIpAddress"]
 
             self.result = """{}
@@ -112,12 +113,20 @@ Host {}
 
         if self.name_list_json_file:
             with open(self.name_list_json_file, 'w', encoding='utf-8') as f:
-                json.dump(instance_name_hostname_map, f, ensure_ascii=False, indent=2)
+                json.dump(instance_details_json, f, ensure_ascii=False, indent=2)
 
         with open(self.ssh_key_names_file, 'w', encoding='utf-8') as f:
             json.dump(ssh_keys_by_instance_name, f, ensure_ascii=False, indent=2)
 
         return self.result
+
+    def get_instance_details(self, bastion_name, instance):
+        jsonObject = {
+            'hostname': bastion_name,
+            'privateIpAddress': instance['PrivateIpAddress'],
+            'keyName': instance['KeyName']
+        }
+        return jsonObject
 
     def get_vpc(self):
         if not self.vpc_id:

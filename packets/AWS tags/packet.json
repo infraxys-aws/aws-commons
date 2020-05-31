@@ -1,5 +1,6 @@
 {
   "version": "1.0",
+  "id": "059281f0-d42e-4ea1-9f43-737509dd37f8",
   "label": "%instance_label%",
   "type": "",
   "autoExpand": false,
@@ -10,6 +11,7 @@
   "infoHtml": "",
   "attributes": [
     {
+      "id": "a258410d-0ec4-45d9-9425-e3176a0138f4",
       "name": "instance_label",
       "caption": "Instance label",
       "type": "java.lang.String",
@@ -23,17 +25,17 @@
       "cacheMinutes": 0,
       "referenceFilter": "",
       "referenceValueAttributeName": "",
-      "referenceChildGuidFilter": "",
+      "referenceChildIdFilter": "",
       "newItemsAllowed": false,
       "parseWithVelocity": false,
       "cloneAttribute": true,
-      "autoExport": true,
       "inputPrompt": "",
       "tooltip": "",
       "scope": "Instance",
       "defaultValue": ""
     },
     {
+      "id": "db4b5e43-6075-41a9-835f-4bb574fff950",
       "name": "tags",
       "caption": "Tags",
       "type": "byte[]",
@@ -48,11 +50,10 @@
       "cacheMinutes": 0,
       "referenceFilter": "",
       "referenceValueAttributeName": "",
-      "referenceChildGuidFilter": "",
+      "referenceChildIdFilter": "",
       "newItemsAllowed": false,
       "parseWithVelocity": true,
       "cloneAttribute": true,
-      "autoExport": true,
       "inputPrompt": "",
       "tooltip": "\u003cp\u003eExample:\u003c/p\u003e\n\u003cpre\u003e\u003csource\u003e\ntags {\n    Environment \u003d \"production\",\n    Name        \u003d \"infraxys-1\"\n}\n\u003c/pre\u003e\u003c/source\u003e",
       "scope": "Instance",

@@ -70,7 +70,7 @@ function get_ami() {
     if [ -n "$ami_name" ]; then
         local name_filter="Name=name,Values=$ami_name";
     else
-        local name_filter="Name=name,Values=$ami_name_prefix"'*';
+        local name_filter="Name=name,Values=$ami_name_prefix";
     fi;
     local owners_option="";
     local executable_users_option="";
@@ -79,7 +79,7 @@ function get_ami() {
     else
       owners_option="--owners $owners";
     fi;
-    log_info "Retrieving latest AMI through filter '$name_filter'.";
+    log_info "Retrieving latest AMI through filter '$name_filter' and owners-option '$owners_option'.";
     local _get_ami="$(aws ec2 describe-images --region "$region" $owners_option \
             --filters "$name_filter" "Name=state,Values=available" \
             $executable_users_option)";

@@ -1,5 +1,6 @@
 {
   "version": "1.0",
+  "id": "479aa92c-f933-4665-a114-f5622be2baa1",
   "label": "AWS login profile %aws_core_credentials_default_profile_or_role%",
   "type": "",
   "autoExpand": false,
@@ -10,6 +11,7 @@
   "infoHtml": "",
   "attributes": [
     {
+      "id": "0c791add-0189-433a-855f-89efd90f6781",
       "name": "aws_core_credentials_default_profile_or_role",
       "caption": "Credentials profile name or role (env level)",
       "type": "java.lang.String",
@@ -23,11 +25,10 @@
       "cacheMinutes": 0,
       "referenceFilter": "",
       "referenceValueAttributeName": "",
-      "referenceChildGuidFilter": "",
+      "referenceChildIdFilter": "",
       "newItemsAllowed": true,
       "parseWithVelocity": true,
       "cloneAttribute": true,
-      "autoExport": true,
       "inputPrompt": "",
       "tooltip": "\u003cp\u003eSpecify the name of the profile that contains the AWS iam credentials or specify \"IAM_ROLE\" if the instance profile role of the provisioning server should be used.\u003c/p\u003e\n\u003cp\u003eWhen a profile is entered, then it will be activated automatically.\u003c/p\u003e",
       "scope": "Environment",

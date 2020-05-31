@@ -1,3 +1,4 @@
+export AWS_COMMONS_MODULE_DIR="$(pwd)";
 
 function set_aws_profile() {
     local force_relogin="false";
