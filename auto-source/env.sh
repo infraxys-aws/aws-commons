@@ -1,3 +1,5 @@
+export PYTHONPATH="$(pwd)/python:$PYTHONPATH";
+
 function generate_ssh_config_for_vpc() {
   local function_name="generate_ssh_config_for_vpc" vpc_name name_list_json_file="/tmp/servers.json";
   import_args "$@";

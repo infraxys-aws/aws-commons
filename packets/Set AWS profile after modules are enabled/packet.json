@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "id": "f3d9e325-cfe8-4c40-b71c-0fd44089c56f",
+  "label": "Set AWS profile (inherit this packet)",
+  "type": "",
+  "autoExpand": false,
+  "skipEveryInstanceFiles": false,
+  "limitToAllowedChildren": false,
+  "autoGenerate": false,
+  "key": "",
+  "infoHtml": "\u003cp\u003eDon\u0027t use this packet as an instance on a role or container.\u003cbr/\u003e\nInstead inherit it on a packet that has attribute \u0027aws_profile\u0027. If this attribute has a value, then a login will be attempted to AWS before the action is executed.\u003c/p\u003e",
+  "attributes": [],
+  "files": [
+    {
+      "id": "726f3bb1-567d-45e6-831c-dd73667756e1",
+      "filename": "after_modules_enabled.set_aws_profile.sh",
+      "includeName": "",
+      "menuCaption": "after_modules_enabled.set_aws_profile",
+      "directory": "",
+      "runsIndependent": false,
+      "runsParallel": false,
+      "runBeforeIndependentActions": false,
+      "parseWithVelocity": true,
+      "executable": false,
+      "saveWith": "CURRENT INSTANCE",
+      "isInteractive": false,
+      "hideRunnerWindow": false,
+      "timeoutSeconds": 3600,
+      "key": "",
+      "menuOrder": 100,
+      "menuSeparatorBefore": false,
+      "hideFromInstanceActionsMenu": false,
+      "hideFromBottomMenu": false,
+      "menuPath": "",
+      "dockerImage": "",
+      "customCommand": ""
+    }
+  ],
+  "allowedChildren": []
+}
