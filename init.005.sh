@@ -19,8 +19,11 @@ function set_aws_profile() {
 
     rm -f ~/.aws/cli/cache/* # this is used when assuming a role
     local identity="";
+    local counter=0;
     while [ -z "$identity" ]; do
-      local identity=$(aws sts get-caller-identity); # script exits if "local" is not used
+        counter=$((counter+1))
+        local identity=$(aws sts get-caller-identity); # script exits if "local" is not used
+        [[ $counter -gt 4 ]] && log_fatal "Failed 5 times to authenticate. Aborting.";
     done;
 
     local username=$(echo -- "$identity" | sed -n 's!.*"arn:aws:iam::.*:user/\(.*\)".*!\1!p')
