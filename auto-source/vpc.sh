@@ -15,7 +15,7 @@ function get_vpc() {
         local _get_vpc="$cached_value";
         log_debug "Retrieved VPC config for '$vpc_name' from cache.";
     else
-        log_info "Retrieving VPC ID for VPC '$vpc_name'.";
+        log_info "Retrieving VPC '$vpc_name'.";
         local _get_vpc="$(aws ec2 describe-vpcs --region "$region" --filters "Name=tag:Name,Values=$vpc_name" | jq -r ".Vpcs[0]")";
         [[ "$_get_vpc" == "null" ]] && _get_vpc="";
     fi;

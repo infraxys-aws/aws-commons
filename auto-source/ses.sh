@@ -1,7 +1,15 @@
 function send_mail() {
-    local function_name="send_email" from to subject mail_body attachment attachment_filename AWS_REGION="us-east-1";
+    local from to subject mail_body mail_body_file attachment attachment_filename AWS_REGION aws_region;
     import_args "$@";
-    check_required_arguments $function_name from to subject mail_body;
+    check_required_arguments send_email from to subject;
+    check_required_argument send_email mail_body mail_body_file;
+
+    [[ -n "$aws_region" ]] && AWS_REGION="$aws_region";
+    [[ -z "$AWS_REGION" ]] && AWS_REGION="us-east-1";
+
+    if [ -z "$mail_body" ]; then
+        mail_body="$(cat "$mail_body_file" | tr -d "\n" | tr -d "\r" | sed 's/"/\\"/g')";
+    fi;
 
     echo "{" > /tmp/message.json;
     echo '"Data":' >> /tmp/message.json;
@@ -10,7 +18,7 @@ function send_mail() {
     echo -n "Subject: $subject\n" >> /tmp/message.json;
     echo -n "MIME-Version: 1.0\n" >> /tmp/message.json;
     echo -n "Content-type: Multipart/Mixed; " >> /tmp/message.json;
-    echo -n " boundary=\\\"NextPart\\\"\n\n--NextPart\nContent-Type: text/plain\n\n" >> /tmp/message.json;
+    echo -n " boundary=\\\"NextPart\\\"\n\n--NextPart\nContent-Type: text/html\n\n" >> /tmp/message.json;
     echo -n "$mail_body.\n\n--NextPart\n" >> /tmp/message.json;
     echo -n "Content-Type: text/plain;\n" >> /tmp/message.json;
     if [ "$attachment" != "" ]; then
@@ -24,6 +32,8 @@ function send_mail() {
     echo "}" >> /tmp/message.json;
     unset HOME # Necessary for aws cli
     log_info "Sending mail to $to.";
+
     aws ses send-raw-email --region $AWS_REGION --raw-message file:///tmp/message.json;
     log_info "Mail sent.";
 }
+

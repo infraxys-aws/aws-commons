@@ -18,6 +18,37 @@ function get_instance_json_by_name() {
     eval "$target_variable_name='$_get_instance_json_by_name'";
 }
 
+function get_instance_json_attribute() {
+    local instance_name vpc_id vpc_name target_variable_name tmp_instance_json region="$aws_region" attribute_name;
+    import_args "$@";
+    check_required_arguments get_instance_json_attribute instance_name target_variable_name region attribute_name;
+    local _get_instance_attribute;
+    log_info "Retrieving attribute '$attribute_name' of instance '$instance_name' in VPC $vpc_id $vpc_name.";
+    get_instance_json_by_name --instance_name "$instance_name" --region "$region" --vpc_id "$vpc_id" --vpc_name "$vpc_name" \
+        --target_variable_name _get_instance_attribute;
+    _get_instance_attribute="$(echo "$_get_instance_attribute" | jq -r ".$attribute_name")";
+    [[ "$_get_instance_attribute" == "null" ]] && _get_instance_attribute="";
+    eval "$target_variable_name='$_get_instance_attribute'";
+}
+
+function get_instance_id() {
+    local instance_name vpc_id vpc_name target_variable_name tmp_instance_json region="$aws_region";
+    import_args "$@";
+    check_required_arguments get_instance_id instance_name target_variable_name region;
+    log_info "Retrieving the id of instance '$instance_name' in VPC $vpc_id $vpc_name.";
+    get_instance_json_attribute --instance_name "$instance_name" --region "$region" --vpc_id "$vpc_id" --vpc_name "$vpc_name" \
+        --attribute_name "InstanceId" --target_variable_name $target_variable_name;
+}
+
+function get_tags() {
+    local instance_name vpc_id vpc_name target_variable_name tmp_instance_json region="$aws_region";
+    import_args "$@";
+    check_required_arguments get_tags instance_name target_variable_name region;
+    log_info "Retrieving the tags of instance '$instance_name' in VPC $vpc_id $vpc_name.";
+    get_instance_json_attribute --instance_name "$instance_name" --region "$region" --vpc_id "$vpc_id" --vpc_name "$vpc_name" \
+        --attribute_name "Tags" --target_variable_name $target_variable_name;
+}
+
 # get_instance_private_ip: Get the private ip address of the instance with name '$instance_name' in vpc with id '$vpc_id'
 function get_instance_private_ip() {
     local function_name="get_instance_private_ip" instance_name vpc_id vpc_name target_variable_name tmp_instance_json \
