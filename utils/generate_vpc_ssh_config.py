@@ -37,7 +37,7 @@ class SshGenerator(object):
         for reservation in instances_json['Reservations']:
             for instance in reservation['Instances']:
                 instance_name = self.get_name_tag_value(instance)
-                if not instance_name:  # ignore instances that don't have a name tag value
+                if not instance_name or ' ' in instance_name:  # ignore instances that don't have a name tag value or a value with spaces
                     continue
 
                 if not "KeyName" in instance:

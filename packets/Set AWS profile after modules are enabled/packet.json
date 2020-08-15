@@ -9,7 +9,31 @@
   "autoGenerate": false,
   "key": "",
   "infoHtml": "\u003cp\u003eDon\u0027t use this packet as an instance on a role or container.\u003cbr/\u003e\nInstead inherit it on a packet that has attribute \u0027aws_profile\u0027. If this attribute has a value, then a login will be attempted to AWS before the action is executed.\u003c/p\u003e",
-  "attributes": [],
+  "attributes": [
+    {
+      "id": "47d6c98c-035c-4b29-8316-f3a295904690",
+      "name": "aws_profile",
+      "caption": "AWS profile",
+      "type": "java.lang.String",
+      "formColumn": 2,
+      "formOrder": 2100,
+      "visibility": "ALWAYS VISIBLE",
+      "writability": "ALWAYS",
+      "required": false,
+      "isPartOfKey": false,
+      "listOfValues": "",
+      "cacheMinutes": 0,
+      "referenceFilter": "",
+      "referenceValueAttributeName": "",
+      "referenceChildIdFilter": "",
+      "newItemsAllowed": false,
+      "parseWithVelocity": true,
+      "inputPrompt": "",
+      "tooltip": "\u003cp\u003eEnter a value if an AWS connection is required (like for sending billing reports).\u003c/p\u003e",
+      "scope": "Instance",
+      "defaultValue": ""
+    }
+  ],
   "files": [
     {
       "id": "726f3bb1-567d-45e6-831c-dd73667756e1",

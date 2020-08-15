@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "id": "5a29191b-17cb-4fad-b4ae-525fe45d7a49",
+  "label": "lst_instance_types",
+  "type": "",
+  "class": "",
+  "autoExpand": false,
+  "skipEveryInstanceFiles": false,
+  "limitToAllowedChildren": false,
+  "autoGenerate": false,
+  "key": "",
+  "infoHtml": "",
+  "attributes": [
+    {
+      "id": "92f1d353-3a02-48be-adf3-269b518bf60a",
+      "name": "instance_type",
+      "caption": "Instance type",
+      "type": "java.lang.String",
+      "formColumn": 1,
+      "formOrder": 1100,
+      "visibility": "ALWAYS VISIBLE",
+      "writability": "ALWAYS",
+      "required": false,
+      "isPartOfKey": false,
+      "listOfValues": "t2.large",
+      "referenceFilter": "",
+      "referenceValueAttributeName": "",
+      "referenceChildIdFilter": "",
+      "newItemsAllowed": true,
+      "parseWithVelocity": false,
+      "inputPrompt": "",
+      "tooltip": "\u003cp\u003eTodo: auto-retrieve instance types.\u003c/p\u003e",
+      "scope": "Instance",
+      "defaultValue": ""
+    }
+  ],
+  "files": [],
+  "allowedChildren": []
+}
