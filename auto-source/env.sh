@@ -10,6 +10,7 @@ function generate_ssh_config_for_vpc() {
     if [ $? -eq 0 ]; then
         log_info "SSH config generated.";
         echo "$_ssh_config" > ~/.ssh/generated.d/$vpc_name;
+        cat ~/.ssh/generated.d/$vpc_name
     else
         log_error "Unable to generate ssh config for vpc '$vpc_name'.";
     fi;
