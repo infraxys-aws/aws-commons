@@ -20,18 +20,21 @@ function generate_ssh_config_for_vpc() {
 function aws_execute_function_over_ssh() {
     local vpc_id private_ips aws_profile_name override_ssh_user vault_config_variable \
         instance_name function_name vpc_name reqion extra_functions_to_export extra_arguments vault_ssh_key_root \
-        pause_in_between callback results_file;
+        pause_in_between callback results_file init_ssh_and_aws="true";
 
     import_args "$@";
     check_required_arguments "aws_execute_function_over_ssh" aws_profile_name vpc_name region instance_name function_name \
         vault_ssh_key_root vault_config_variable;
 
     shift 8; # remove the first arguments because there's no need to pass them all
-    set_aws_profile --profile_name "$aws_profile_name"
-    generate_ssh_config_for_vpc --vpc_name "$vpc_name";
 
-    get_ssh_keys_from_vault --vault_config_variable "$vault_config_variable" \
-        --vault_ssh_key_root "$vault_ssh_key_root";
+    if [ "$init_ssh_and_aws" == "true" ]; then
+        set_aws_profile --profile_name "$aws_profile_name"
+        generate_ssh_config_for_vpc --vpc_name "$vpc_name";
+
+        get_ssh_keys_from_vault --vault_config_variable "$vault_config_variable" \
+            --vault_ssh_key_root "$vault_ssh_key_root";
+    fi;
 
     local first="true";
     for host in $(cat /tmp/servers.json | jq -cr '.["'$instance_name'"] | .[]'); do
