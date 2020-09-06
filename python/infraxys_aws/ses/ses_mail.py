@@ -11,10 +11,13 @@ class SesMail(object):
     def __init__(self):
         pass
 
-    def mail(self, sender, recipient, subject, body_text, body_html, region='us-east-1'):
+    def mail(self, sender, recipient, subject, body_text, body_html, region='us-east-1', profile_name=None):
         CONFIGURATION_SET = "ConfigSet"
         CHARSET = "UTF-8"
-        client = boto3.client('ses', region_name=region)
+        if profile_name:
+            client = boto3.session.Session(profile_name=profile_name).client('ses')
+        else:
+            client = boto3.client('ses', region_name=region)
 
         try:
             response = client.send_email(
