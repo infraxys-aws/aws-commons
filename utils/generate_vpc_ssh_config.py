@@ -43,6 +43,9 @@ class SshGenerator(object):
                 if not "KeyName" in instance:
                     continue
 
+                if instance['State']['Code'] != 16: # instance is not running, ignore it
+                    continue
+
                 if not instance_name in ssh_keys_by_instance_name:
                     ssh_keys_by_instance_name[instance_name] = '{}.pem'.format(instance["KeyName"])
 
