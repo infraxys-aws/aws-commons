@@ -448,6 +448,30 @@
       "menuPath": "",
       "dockerImage": "",
       "customCommand": ""
+    },
+    {
+      "id": "19434e54-fffa-4e99-9ae6-d5b37e3fa15b",
+      "filename": "terraform_import.sh",
+      "includeName": "",
+      "menuCaption": "Terraform import",
+      "directory": "",
+      "runsIndependent": false,
+      "runsParallel": false,
+      "runBeforeIndependentActions": false,
+      "parseWithVelocity": true,
+      "executable": true,
+      "saveWith": "CURRENT INSTANCE",
+      "isInteractive": false,
+      "hideRunnerWindow": false,
+      "timeoutSeconds": 3600,
+      "key": "",
+      "menuOrder": 100,
+      "menuSeparatorBefore": false,
+      "hideFromInstanceActionsMenu": false,
+      "hideFromBottomMenu": false,
+      "menuPath": "",
+      "dockerImage": "",
+      "customCommand": ""
     }
   ],
   "allowedChildren": []
