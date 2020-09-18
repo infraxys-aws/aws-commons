@@ -26,7 +26,7 @@ function generate_ssh_config_for_vpc() {
 function aws_execute_function_over_ssh() {
     local vpc_id private_ips aws_profile_name override_ssh_user vault_config_variable \
         instance_name function_name vpc_name reqion extra_functions_to_export extra_arguments vault_ssh_key_root \
-        pause_in_between callback results_file init_ssh_and_aws="true";
+        pause_in_between callback results_file init_ssh_and_aws="true" fail_if_no_hosts_found="true";
 
     import_args "$@";
     check_required_arguments "aws_execute_function_over_ssh" aws_profile_name vpc_name region instance_name function_name \
@@ -43,6 +43,26 @@ function aws_execute_function_over_ssh() {
     fi;
 
     local first="true";
+    if [ ! -f /tmp/servers.json ]; then
+        if [ "$fail_if_no_hosts_found" != "false" ]; then
+            log_fatal "/tmp/servers.json doesn't exist. Aborting since argument 'fail_if_no_hosts_found' for function 'aws_execute_function_over_ssh' is not 'false'.";
+        else
+            return;
+        fi;
+    else
+        log_info "Checking if there are hosts called '$instance_name' in /tmp/servers.json.";
+        local host_count="$(cat /tmp/servers.json | jq -r '.["'$instance_name'"] | length')"; # instance_name is an element with a list of host children
+        if [ $host_count -eq 0 ]; then
+            if [ "$fail_if_no_hosts_found" != "false" ]; then
+                log_fatal "No hosts called '$instance_name' found. Aborting since argument 'fail_if_no_hosts_found' for function 'aws_execute_function_over_ssh' is not 'false'.";
+            else
+                return;
+            fi;
+        else
+            log_info "Looping over $host_count $instance_name hosts.";
+        fi;
+    fi;
+
     for host in $(cat /tmp/servers.json | jq -cr '.["'$instance_name'"] | .[]'); do
         if [ "$first" == "false" -a -n "$pause_in_between" ]; then
             if [ "$pause_in_between" == "pause" ]; then
