@@ -1,5 +1,4 @@
 #!/usr/bin/env python3.7
-
 import json
 import sys
 
@@ -123,10 +122,12 @@ Host {}
 
         return self.result
 
-    def get_instance_details(self, bastion_name, instance):
+    def get_instance_details(self, instance_name, instance):
         jsonObject = {
-            'hostname': bastion_name,
+            'hostname': instance_name,
             'privateIpAddress': instance['PrivateIpAddress'],
+            'instanceId': instance['InstanceId'],
+            'state': instance['State'],
             'keyName': instance['KeyName']
         }
         return jsonObject
