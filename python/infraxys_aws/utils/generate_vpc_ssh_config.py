@@ -4,13 +4,13 @@ import sys
 
 import boto3
 
+class GenerateVpcSshConfig(object):
 
-class SshGenerator(object):
-
-    def __init__(self, vpc_id=None, vpc_name=None, name_list_json_file=None):
+    def __init__(self, vpc_id=None, vpc_name=None, name_list_json_file=None, ssh_config_filename=None):
         self.vpc_id = vpc_id
         self.vpc_name = vpc_name
         self.name_list_json_file = name_list_json_file
+        self.ssh_config_filename = ssh_config_filename
         self.ssh_key_names_file = '/tmp/ssh_key_names.json'
         self.ec2 = boto3.client('ec2')
         self.result = ""
@@ -174,6 +174,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         name_list_json_file = sys.argv[2]
 
-    generator = SshGenerator(vpc_name=vpc_name, name_list_json_file=name_list_json_file)
+    generator = GenerateVpcSshConfig(vpc_name=vpc_name, name_list_json_file=name_list_json_file)
     result = generator.generate_config()
     print(result)

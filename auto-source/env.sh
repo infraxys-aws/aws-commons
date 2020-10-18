@@ -6,7 +6,7 @@ function generate_ssh_config_for_vpc() {
     check_required_arguments "$function_name" vpc_name;
     log_info "Generating SSH configuration for VPC $vpc_name into ~/.ssh/generated.d/$vpc_name.";
 
-    local _ssh_config="$("$AWS_COMMONS_MODULE_DIR/utils/generate_vpc_ssh_config.py" "$vpc_name" "$name_list_json_file")";
+    local _ssh_config="$("$AWS_COMMONS_MODULE_DIR/python/infraxys_aws/utils/generate_vpc_ssh_config.py" "$vpc_name" "$name_list_json_file")";
     if [ $? -eq 0 -a "$_ssh_config" != "" ]; then
         log_info "SSH config generated.";
         echo "$_ssh_config" > ~/.ssh/generated.d/$vpc_name;

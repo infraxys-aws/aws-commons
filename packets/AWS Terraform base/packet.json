@@ -22,7 +22,7 @@
       "writability": "ALWAYS",
       "required": false,
       "isPartOfKey": false,
-      "listOfValues": "2.63.0,2.53.0",
+      "listOfValues": "~\u003e 3.11.0,~\u003e 2.63.0",
       "cacheMinutes": 0,
       "referenceFilter": "",
       "referenceValueAttributeName": "",
@@ -32,7 +32,7 @@
       "inputPrompt": "",
       "tooltip": "\u003cp\u003eLeave empty if an aws-provider is injected by a child instance. This is useful when using multiple AWS credentials in the same run.\u003c/p\u003e.",
       "scope": "Instance",
-      "defaultValue": "2.63.0"
+      "defaultValue": "~\u003e 3.11.0"
     },
     {
       "id": "88f9f8fc-fe7f-4015-acc2-1135a6e188b1",
@@ -162,6 +162,28 @@
       "tooltip": "",
       "scope": "Instance",
       "defaultValue": ""
+    },
+    {
+      "id": "aa7b4200-9aa0-4077-bf66-0005b7f75db2",
+      "name": "template_version",
+      "caption": "Template version",
+      "type": "java.lang.String",
+      "formColumn": 1,
+      "formOrder": 1175,
+      "visibility": "ALWAYS VISIBLE",
+      "writability": "ALWAYS",
+      "required": false,
+      "isPartOfKey": false,
+      "listOfValues": "~\u003e 2.0.0,~\u003e 2.2.0",
+      "referenceFilter": "",
+      "referenceValueAttributeName": "",
+      "referenceChildIdFilter": "",
+      "newItemsAllowed": true,
+      "parseWithVelocity": false,
+      "inputPrompt": "",
+      "tooltip": "",
+      "scope": "Instance",
+      "defaultValue": "~\u003e 2.2.0"
     }
   ],
   "files": [
