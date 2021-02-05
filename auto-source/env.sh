@@ -22,3 +22,19 @@ function generate_ssh_config_for_vpc() {
     fi;
 }
 
+function cache_ssh_config_in_project() {
+	local vpc_name aws_profile vault_config_variable;
+	import_args "$@";
+	check_required_arguments "cache_ssh_config_in_project" vpc_name aws_profile vault_config_variable;
+	
+	mkdir -p /cache/project/.ssh/keys;
+	mkdir -p /cache/project/.ssh/config.d;	
+	
+	set_aws_profile --profile_name "$aws_profile";
+	generate_ssh_config_for_vpc --vpc_name "$vpc_name";
+	get_ssh_keys_from_vault --vault_config_variable "$vault_config_variable";
+	
+	cp ~/.ssh/keys/* /cache/project/.ssh/keys;
+	cp ~/.ssh/generated.d/$vpc_name /cache/project/.ssh/config.d/;
+}	
+
